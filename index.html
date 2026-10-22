@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Platter</title>
+<meta name="theme-color" content="#faf8f3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Platter">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="col top">
+  <button id="logo" class="mono" aria-label="Home">P/L</button>
+  <button id="menuBtn" aria-label="Menu">
+    <svg width="20" height="10" viewBox="0 0 20 10"><path d="M0 1h20M4 5h16M0 9h20" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+  </button>
+</header>
+
+<main id="app" class="col">
+
+  <!-- HOME -->
+  <section id="v-home" class="view on">
+    <div class="wm"><h1>PLATTER</h1></div>
+    <div class="sub mono"><span>Music streaming</span><span id="year"></span></div>
+
+    <div id="connect" class="note" hidden>
+      <p class="mono">Not connected yet. Add your Google Client ID or a YouTube API key to begin.</p>
+      <button class="tbtn red mono" data-go="settings">Open settings</button>
+    </div>
+
+    <form id="sf" class="search" autocomplete="off">
+      <input id="q" type="search" placeholder="SEARCH MUSIC" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Search music">
+    </form>
+
+    <div id="railWrap" hidden>
+      <div class="idx mono">01 — Your shelves</div>
+      <div id="rail" class="rail"></div>
+    </div>
+
+    <div id="recentWrap" class="pad" hidden>
+      <h2 class="sec mono">Recently played</h2>
+      <div id="recent"></div>
+    </div>
+  </section>
+
+  <!-- COLLECTION / RESULTS -->
+  <section id="v-col" class="view">
+    <div class="pad">
+      <button id="back" class="mono mute">← Back</button>
+      <h1 id="cTitle" class="big"></h1>
+      <div id="cSub" class="mono mute"></div>
+      <div class="actions">
+        <button id="playAll" class="tbtn red mono">Play all</button>
+        <button id="shufAll" class="tbtn mono">Shuffle</button>
+      </div>
+      <div id="cRows"></div>
+      <div class="moreRow"><button id="more" class="tbtn mono" hidden>See more</button></div>
+    </div>
+    <div class="deco"><div class="vinyl"></div></div>
+  </section>
+</main>
+
+<!-- MINI PLAYER -->
+<div id="mini" class="col">
+  <i id="miniP" class="line"></i>
+  <button id="miniOpen" class="miniInfo" aria-label="Open player">
+    <img id="miniArt" alt="">
+    <span class="meta"><b id="miniTitle"></b><i id="miniArtist"></i></span>
+  </button>
+  <div class="miniCtl">
+    <button id="miniPrev" class="ic" aria-label="Previous"></button>
+    <button id="miniPlay" class="playBtn" aria-label="Play or pause"></button>
+    <button id="miniNext" class="ic" aria-label="Next"></button>
+  </div>
+</div>
+
+<!-- NOW PLAYING -->
+<section id="now" class="col overlay" aria-hidden="true">
+  <div class="nowTop">
+    <button id="nowClose" class="mono">↓ Close</button>
+    <span id="nowCount" class="mono mute"></span>
+  </div>
+  <div id="stage" class="stage">
+    <div class="vinyl spin"></div>
+    <img id="nowArt" alt="">
+  </div>
+  <div class="nowMeta">
+    <h2 id="nowTitle"></h2>
+    <p id="nowArtist" class="mono mute"></p>
+  </div>
+  <div class="scrub">
+    <div id="bar"><i id="barFill"></i><b id="barKnob"></b></div>
+    <div class="times mono"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
+  </div>
+  <div class="ctrls">
+    <button id="shuf" class="ic stroke" aria-label="Shuffle"></button>
+    <button id="prev" class="ic" aria-label="Previous"></button>
+    <button id="play" class="playBtn big" aria-label="Play or pause"></button>
+    <button id="next" class="ic" aria-label="Next"></button>
+    <button id="rep" class="ic stroke" aria-label="Repeat"></button>
+  </div>
+  <div class="nowFoot">
+    <button id="vidBtn" class="tbtn mono">Show video</button>
+  </div>
+  <div class="pad">
+    <h2 class="sec mono">Up next</h2>
+    <div id="nowQueue"></div>
+  </div>
+</section>
+
+<!-- MENU -->
+<nav id="menu" class="col overlay" aria-hidden="true">
+  <div class="nowTop"><span class="mono mute">Menu</span><button id="menuClose" class="mono">Close ✕</button></div>
+  <ul>
+    <li><button data-go="home"><span class="mono">01</span>Home</button></li>
+    <li><button data-go="search"><span class="mono">02</span>Search</button></li>
+    <li><button data-go="liked"><span class="mono">03</span>Liked</button></li>
+    <li><button data-go="settings"><span class="mono">04</span>Settings</button></li>
+  </ul>
+</nav>
+
+<!-- SETTINGS -->
+<section id="settings" class="col overlay" aria-hidden="true">
+  <div class="nowTop"><span class="mono mute">Settings</span><button id="settingsClose" class="mono">Close ✕</button></div>
+  <div class="pad">
+    <h1 class="big" style="font-size:calc(var(--vw)*15)">CONNECT</h1>
+    <p id="status" class="mono mute" style="margin:10px 0 22px"></p>
+
+    <label class="mono mute" for="cid">Google OAuth Client ID</label>
+    <input id="cid" class="field" type="text" placeholder="xxxx.apps.googleusercontent.com" autocapitalize="off" autocorrect="off" spellcheck="false">
+
+    <label class="mono mute" for="key">YouTube API key (optional)</label>
+    <input id="key" class="field" type="text" placeholder="AIza…" autocapitalize="off" autocorrect="off" spellcheck="false">
+
+    <div class="actions">
+      <button id="saveCfg" class="tbtn mono">Save</button>
+      <button id="signIn" class="tbtn red mono">Sign in with Google</button>
+      <button id="signOut" class="tbtn mono">Sign out</button>
+    </div>
+
+    <div class="help mono">
+      <p>1. Google Cloud Console → enable <u>YouTube Data API v3</u>.</p>
+      <p>2. Credentials → OAuth client ID → Web application.</p>
+      <p>3. Add this app's URL as an authorized JavaScript origin.</p>
+      <p>4. OAuth consent screen → add yourself as a test user.</p>
+      <p>5. Paste the Client ID above and sign in.</p>
+      <p>An API key alone gives search and playback, but not your playlists or likes.</p>
+    </div>
+  </div>
+</section>
+
+<div id="yt-wrap"><div id="yt"></div></div>
+<div id="toast" class="mono" role="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
